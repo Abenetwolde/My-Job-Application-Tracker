@@ -10,12 +10,13 @@ const Layout = () => {
           headerShown: false,
         }}
       />
-          <Stack.Screen
+               <Stack.Screen
         name="details/[id]"
         options={{
           headerShown: false,
         }}
       />
+ 
     </Stack>
   );
 };

@@ -1,11 +1,21 @@
 {
   "expo": {
-    "name": "my-app",
+    "name": "myapp",
     "slug": "my-app",
+    "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ]
+  },
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+ "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -26,4 +36,4 @@
       "bundler": "metro"
     }
   }
-}
+
