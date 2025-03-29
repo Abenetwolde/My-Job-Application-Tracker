@@ -5,6 +5,9 @@
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "plugins": [
       [
         "expo-dev-client",
@@ -12,11 +15,7 @@
           "launchMode": "most-recent"
         }
       ]
-    ]
-  },
-    "icon": "./assets/icon.png",
- "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -26,6 +25,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.mycompany.myapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,4 +36,4 @@
       "bundler": "metro"
     }
   }
-
+}

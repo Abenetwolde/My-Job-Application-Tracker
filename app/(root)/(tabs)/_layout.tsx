@@ -25,7 +25,7 @@ const TabIcon = ({
     <Icon
       name={name}
       size={30}
-      color={focused ? "#333333" : "white"}
+      color={focused ? "bg-gray-800" : "white"}
       // style={{ tintColor: "white" }}
     />
   </View>
@@ -83,6 +83,13 @@ export default function Layout() {
       />
       <Tabs.Screen
         name="details/[id]"
+        options={{
+          headerShown: false,
+          href: null, // Hide this route from the tab bar
+        }}
+      />
+         <Tabs.Screen
+        name="editApplication/[item]"
         options={{
           headerShown: false,
           href: null, // Hide this route from the tab bar

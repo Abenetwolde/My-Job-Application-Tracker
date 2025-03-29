@@ -4,9 +4,10 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, Pressable } from "re
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Feather";
 // import { useApplications } from "@/app/api/fetchApplications";
-import { useApplications } from "@/app/api/fetchApplications";
+import { useApplications, useDeleteApplication } from "@/app/api/fetchApplications";
 import { ApplicationListItem } from "../../components/ApplicationListItem";
 import { FilterModal } from "../../components/FilterModal";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Home = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const Home = () => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-
+  const { mutate: deleteApplication, isPending: isDeleting } = useDeleteApplication();
   const { data: applications, isLoading, error: fetchError } = useApplications(
     searchQuery,
     selectedStatuses
@@ -33,11 +34,26 @@ const Home = () => {
     setSelectedStatuses([]);
   };
 
+
+  const handleDelete = (item: any) => {
+    deleteApplication(item, {
+      onSuccess: () => {
+        console.log("Application deleted successfully");
+      },
+      onError: (error:any) => {
+        console.error("Failed to delete application:", error.message);
+      },
+    });
+  };
   const handleItemPress = (id: string) => {
     router.push(`/details/${id}`);
   };
-
+  const handleFilterPress = () => {
+    console.log("Filter button pressed"); // Debug log
+    setFilterVisible(true);
+  };
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <View className="flex-1 mb-30 bg-gray-100">
       {/* Header */}
       <View className="flex-row justify-between items-center p-4 bg-white">
@@ -77,7 +93,7 @@ const Home = () => {
           </Pressable>
           <TouchableOpacity
             className="ml-2 p-4 bg-white rounded-lg shadow-md border border-gray-200 relative"
-            onPress={() => setFilterVisible(true)}
+            onPress={handleFilterPress}
           >
             <Icon name="filter" size={24} color="#4B5563" />
             {selectedStatuses.length > 0 && (
@@ -99,12 +115,17 @@ const Home = () => {
       </View>
 
       {/* Filter Modal */}
-      <FilterModal
-        visible={filterVisible}
-        onClose={() => setFilterVisible(false)}
-        selectedStatuses={selectedStatuses}
-        onSelectStatus={handleSelectStatus}
-      />
+      {filterVisible && (
+          <FilterModal
+            visible={filterVisible}
+            onClose={() => {
+              console.log("Closing modal"); // Debug log
+              setFilterVisible(false);
+            }}
+            selectedStatuses={selectedStatuses}
+            onSelectStatus={handleSelectStatus}
+          />
+        )}
 
       {/* Applications Count and Add Button */}
       <View className="flex-row justify-between items-center px-4 mb-3">
@@ -112,7 +133,7 @@ const Home = () => {
           {applications?.length || 0} applications found
         </Text>
         <TouchableOpacity
-          className="px-4 py-2 bg-blue-500 rounded-lg border border-blue-600 shadow-md"
+          className="px-4 py-2 bg-gray-800 rounded-lg border border-blue-600 shadow-md"
           onPress={() => router.push("/myApplication")}
         >
           <Text className="text-white font-medium">
@@ -130,10 +151,11 @@ const Home = () => {
         </Text>
       ) : (
         <FlatList
+        key={`${selectedStatuses.join(',')}-${searchQuery}`}
           data={applications}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handleItemPress(item.id)}>
-              <ApplicationListItem item={item} />
+         <ApplicationListItem item={item} onDelete={handleDelete} isDeleting={isDeleting} />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
@@ -142,6 +164,7 @@ const Home = () => {
         />
       )}
     </View>
+    </GestureHandlerRootView>
   );
 };
 
