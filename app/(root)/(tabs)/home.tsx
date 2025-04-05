@@ -1,6 +1,6 @@
 // app/(root)/(tabs)/home.tsx
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity, Pressable, Modal } from "react-native";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Feather";
 // import { useApplications } from "@/app/api/fetchApplications";
@@ -8,6 +8,7 @@ import { useApplications, useDeleteApplication } from "@/app/api/fetchApplicatio
 import { ApplicationListItem } from "../../components/ApplicationListItem";
 import { FilterModal } from "../../components/FilterModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ErrorBoundary from "@/app/ErrorBoundary";
 
 const Home = () => {
   const router = useRouter();
@@ -53,7 +54,8 @@ const Home = () => {
     setFilterVisible(true);
   };
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <ErrorBoundary>
+
     <View className="flex-1 mb-30 bg-gray-100">
       {/* Header */}
       <View className="flex-row justify-between items-center p-4 bg-white">
@@ -115,17 +117,32 @@ const Home = () => {
       </View>
 
       {/* Filter Modal */}
-      {filterVisible && (
+      {/* {filterVisible && (
           <FilterModal
             visible={filterVisible}
             onClose={() => {
               console.log("Closing modal"); // Debug log
               setFilterVisible(false);
             }}
-            selectedStatuses={selectedStatuses}
-            onSelectStatus={handleSelectStatus}
+            selectedStatuses={selectedStatuses||[]}
+            onSelectStatus={handleSelectStatus||(() => {})}
           />
+        )} */}
+        {filterVisible && (
+          <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center">
+            <FilterModal
+              visible={filterVisible}
+              onClose={() => {
+                console.log("Closing modal"); // Debug log
+                setFilterVisible(false);
+              }}
+              selectedStatuses={selectedStatuses}
+              onSelectStatus={handleSelectStatus}
+            />
+          </View>
         )}
+
+
 
       {/* Applications Count and Add Button */}
       <View className="flex-row justify-between items-center px-4 mb-3">
@@ -150,21 +167,26 @@ const Home = () => {
           Error: {(fetchError as Error).message}
         </Text>
       ) : (
+
         <FlatList
         key={`${selectedStatuses.join(',')}-${searchQuery}`}
           data={applications}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleItemPress(item.id)}>
-         <ApplicationListItem item={item} onDelete={handleDelete} isDeleting={isDeleting} />
+            <TouchableOpacity onPress={() => handleItemPress(item?.id)} >
+         <ApplicationListItem item={item} onDelete={handleDelete} isDeleting={isDeleting} isModalVisible={filterVisible}/>
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item?.id}
           contentContainerStyle={{ paddingHorizontal: 16 }}
           showsVerticalScrollIndicator={false}
         />
-      )}
+    
+          )
+          }
+      
     </View>
-    </GestureHandlerRootView>
+    </ErrorBoundary>
+
   );
 };
 

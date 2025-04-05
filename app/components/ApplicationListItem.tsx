@@ -14,13 +14,15 @@ import { useRouter } from "expo-router";
 interface ApplicationListItemProps {
   item: Application;
   onDelete: (item: Application) => void; 
-  isDeleting:boolean// Callback for deleting the item
+  isDeleting:boolean;
+isModalVisible: boolean;// Callback for deleting the item
 }
 
 export const ApplicationListItem: React.FC<ApplicationListItemProps> = ({
   item,
   onDelete,
-  isDeleting=false, // Flag to indicate if the item is being deleted
+  isDeleting=false, 
+  isModalVisible,// Flag to indicate if the item is being deleted
 }) => {
   const router = useRouter();
 
@@ -69,13 +71,14 @@ export const ApplicationListItem: React.FC<ApplicationListItemProps> = ({
   };
 
   return (
-    <GestureHandlerRootView>
+
       <ReanimatedSwipeable
         containerStyle={styles.swipeable}
         friction={2}
         enableTrackpadTwoFingerGesture
         rightThreshold={40}
         renderRightActions={RightActions}
+        enabled={!isModalVisible}
       >
         <View
           className={`flex-row justify-between items-center p-4 bg-white rounded-lg   mb-2`}
@@ -107,13 +110,13 @@ export const ApplicationListItem: React.FC<ApplicationListItemProps> = ({
             </View>
 
             {/* Date at the bottom-right */}
-            <Text className="text-xs pt-3 text-gray-400">
-              {item["Application Date"]}
-            </Text>
+            {/* <Text className="text-xs pt-3 text-gray-400">
+              {item["Application Date"]||"N/A"}
+            </Text> */}
           </View>
         </View>
       </ReanimatedSwipeable>
-    </GestureHandlerRootView>
+
   );
 };
 

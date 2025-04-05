@@ -21,7 +21,9 @@ export default function EditApplication() {
   const [location, setLocation] = useState(parsedItem.Location);
   const [from, setFrom] = useState(parsedItem.From);
   const [applicationDate, setApplicationDate] = useState<Date>(
-    new Date(parsedItem["Application Date"]) // Parse the date string to a Date object
+    parsedItem["Application Date"]
+      ? new Date(parsedItem["Application Date"])
+      : new Date()
   );
   const [status, setStatus] = useState(parsedItem.Status);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -29,16 +31,15 @@ export default function EditApplication() {
   const statuses = ["Approved", "Rejected", "Examined", "Pending"];
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false); // Close the picker on iOS after selection
-    if (selectedDate) {
+    setShowDatePicker(Platform.OS === "ios" ? false : showDatePicker); // Only close on iOS
+    if (selectedDate && !isNaN(selectedDate.getTime())) {
       setApplicationDate(selectedDate);
     }
   };
-
   const showDatepicker = () => {
     if (Platform.OS === "android") {
       DateTimePickerAndroid.open({
-        value: applicationDate,
+        value: applicationDate||new Date(),
         onChange: handleDateChange,
         mode: "date",
         is24Hour: false,
@@ -54,7 +55,7 @@ export default function EditApplication() {
       return;
     }
 
-    const formattedDate = applicationDate.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+    const formattedDate = applicationDate?  applicationDate.toLocaleDateString() : null; // Format the date as needed
 
     const updatedApplication: Application = {
       ...parsedItem,
@@ -63,7 +64,7 @@ export default function EditApplication() {
       Type: type,
       Location: location,
       From: from,
-      "Application Date": formattedDate,
+      // "Application Date": formattedDate||,
       Status: status,
     };
 
@@ -90,12 +91,13 @@ export default function EditApplication() {
           <Icon name="arrow-left" size={24} color="#4B5563" />
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-800">Edit Application</Text>
-        <View className="w-6" />
+        <View className="w-6" /> {/* Spacer for alignment */}
       </View>
+     
 
       {/* Form */}
            <ScrollView
-                className="flex-1 p-4"
+                className="flex-1 "
                 contentContainerStyle={{ paddingBottom: 170 }} // Add padding to the bottom
                 keyboardShouldPersistTaps="handled" // Ensure taps work while keyboard is open
               >
@@ -167,14 +169,14 @@ export default function EditApplication() {
                 }}
               >
                 <Text style={{ color: "#333333" }}>
-                  {applicationDate.toISOString().split("T")[0]}
+                  {applicationDate?.toLocaleDateString() || "Select date"}
                 </Text>
               </View>
             </Pressable>
             {showDatePicker && Platform.OS === "ios" && (
               <DateTimePicker
                 testID="dateTimePicker"
-                value={applicationDate}
+                value={applicationDate||new Date()}
                 mode="date"
                 accentColor="#333333"
                 textColor="#FFFFFF"

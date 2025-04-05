@@ -26,13 +26,14 @@ const TabIcon = ({
       name={name}
       size={30}
       color={focused ? "bg-gray-800" : "white"}
-      // style={{ tintColor: "white" }}
+    // style={{ tintColor: "white" }}
     />
   </View>
 );
 
 export default function Layout() {
   return (
+
     <Tabs
       initialRouteName="home"
       screenOptions={{
@@ -47,7 +48,7 @@ export default function Layout() {
           paddingVertical: 0,
           marginHorizontal: 20,
           marginBottom: 20,
-          height: 60,
+          height: 70,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -57,6 +58,12 @@ export default function Layout() {
         },
       }}
     >
+      <Tabs.Screen name="dashboard" 
+      options={{
+          title: "Dashboard",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <TabIcon name="bar-chart-2" focused={focused} />,
+        }} />
       <Tabs.Screen
         name="home"
         options={{
@@ -65,22 +72,7 @@ export default function Layout() {
           tabBarIcon: ({ focused }) => <TabIcon name="home" focused={focused} />,
         }}
       />
-      <Tabs.Screen
-        name="rides"
-        options={{
-          title: "Rides",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon name="list" focused={focused} />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon name="user" focused={focused} />,
-        }}
-      />
+     
       <Tabs.Screen
         name="details/[id]"
         options={{
@@ -88,15 +80,16 @@ export default function Layout() {
           href: null, // Hide this route from the tab bar
         }}
       />
-         <Tabs.Screen
-        name="editApplication/[item]"
+
+      <Tabs.Screen
+        name="myApplication"
         options={{
           headerShown: false,
           href: null, // Hide this route from the tab bar
         }}
       />
       <Tabs.Screen
-        name="myApplication"
+        name="editApplication/[item]"
         options={{
           headerShown: false,
           href: null, // Hide this route from the tab bar
