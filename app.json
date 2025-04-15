@@ -5,7 +5,6 @@
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "plugins": [
@@ -14,10 +13,10 @@
         {
           "launchMode": "most-recent"
         }
-      ]
+      ],
+      "expo-build-properties"
     ],
     "splash": {
-      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -27,13 +26,17 @@
     "android": {
       "package": "com.mycompany.myapp",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+       
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6370eaad-21c5-44e5-be58-a4ffe3a29c47"
+      }
     }
   }
 }
